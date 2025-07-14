@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immersive Experience</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for the tiled background */
+        body {
+            font-family: 'Inter', sans-serif; /* Using Inter font as per instructions */
+            background-image: url('https://placehold.co/100x100/C0FFEE/FEEC0F/png?text=2026'); /* Placeholder for a tiled image */
+            background-repeat: repeat; /* Make the image tile across the background */
+            background-size: 100px 100px; /* Adjust tile size as needed */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevent scrolling if content overflows */
+        }
+
+        /* Styling for the main content container */
+        .content-container {
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+            padding: 2.5rem; /* Large padding */
+            border-radius: 1.5rem; /* Rounded corners */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Deep shadow */
+            text-align: center;
+            color: #E0E7FF; /* Light text color */
+            max-width: 90%; /* Max width for responsiveness */
+            width: 500px; /* Fixed width for larger screens */
+        }
+
+        h1 {
+            font-size: 2.5rem; /* Large heading */
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #C4B5FD; /* Lighter purple for heading */
+        }
+
+        p {
+            font-size: 1.125rem; /* Paragraph text size */
+            line-height: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Message box styling */
+        .message-box {
+            background-color: #4C1D95; /* Darker purple */
+            color: #F3E8FF; /* Very light purple */
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            display: none; /* Hidden by default */
+        }
+        .message-box.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Audio element for background music -->
+    <audio id="backgroundMusic" autoplay loop>
+        <!--
+            Note: Replace 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+            with a URL to your desired royalty-free music file.
+            This is a placeholder URL for demonstration purposes.
+        -->
+        <source src="https://github.com/ivorydevrimoalt/2026.IS.NEW.YEAR/raw/refs/heads/main/312.wav" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="content-container">
+        <h1>2026 IS NEW YEAR</h1>
+        <p>
+            2026 IS NEW YEAR 2026 IS NEW YEAR 2026 IS NEW YEAR 2026 IS NEW YEAR 2026 IS NEW YEAR 2026 IS NEW YEAR
+            2026 IS NEW YEAR 2026
+        </p>
+        <p>
+            2026 IS NEW YEAR 2026 IS NEW YEAR 2026 IS NEW YEAR 2026 IS NEW YEAR 2026 IS NEW YEAR 2026 IS NEW YEAR
+        </p>
+        <div id="messageBox" class="message-box">
+            NO, 2026 IS TIRED OF UNDO-ING THE FUN, STAY THERE!!!
+        </div>
+    </div>
+
+    <script>
+        // Get the audio element
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const messageBox = document.getElementById('messageBox');
+
+        // Play music when the window loads.
+        // This is important because some browsers block autoplay without user interaction.
+        // We attempt to play it here, but a user interaction might still be required.
+        window.onload = function() {
+            backgroundMusic.play().catch(e => {
+                console.log("Autoplay was prevented:", e);
+                // Optionally show a message to the user to click anywhere to play music
+                // messageBox.textContent = "Click anywhere to play music!";
+                // messageBox.classList.add('show');
+            });
+
+            // Manipulate browser history to make going back difficult.
+            // Push a new state on page load.
+            history.pushState(null, document.title, location.href);
+
+            // Listen for the popstate event (when back/forward button is pressed)
+            window.addEventListener('popstate', function (event) {
+                // When the user tries to go back, push the current state again.
+                // This effectively keeps them on the same page.
+                history.pushState(null, document.title, location.href);
+
+                // Show a message to the user that they can't go back easily
+                messageBox.textContent = "You're already here! Enjoy the experience.";
+                messageBox.classList.add('show');
+                setTimeout(() => {
+                    messageBox.classList.remove('show');
+                }, 3000); // Hide message after 3 seconds
+            });
+
+            // Optional: Prevent navigation away from the page (shows a confirmation dialog)
+            // This is generally not recommended for user experience and can be annoying.
+            /*
+            window.addEventListener('beforeunload', function (e) {
+                // Cancel the event
+                e.preventDefault();
+                // Chrome requires returnValue to be set
+                e.returnValue = '';
+                // Most browsers will display a default message like "Changes you made may not be saved."
+                // You cannot customize this message in modern browsers.
+            });
+            */
+        };
+    </script>
+</body>
+</html>
