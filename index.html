@@ -62,15 +62,7 @@
 </head>
 <body>
     <!-- Audio element for background music -->
-    <audio id="backgroundMusic" autoplay loop>
-        <!--
-            Note: Replace 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-            with a URL to your desired royalty-free music file.
-            This is a placeholder URL for demonstration purposes.
-        -->
-        <source src="https://github.com/ivorydevrimoalt/2026.IS.NEW.YEAR/raw/refs/heads/main/312.wav" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    <audio id="backgroundMusic" autoplay src="https://github.com/ivorydevrimoalt/2026.IS.NEW.YEAR/raw/refs/heads/main/312.wav"></audio>
 
     <div class="content-container">
         <h1>2026 IS NEW YEAR</h1>
@@ -113,7 +105,7 @@
                 history.pushState(null, document.title, location.href);
 
                 // Show a message to the user that they can't go back easily
-                messageBox.textContent = "You're already here! Enjoy the experience.";
+                messageBox.textContent = "NO, 2026 IS TIRED OF UNDO-ING THE FUN, STAY THERE!!!";
                 messageBox.classList.add('show');
                 setTimeout(() => {
                     messageBox.classList.remove('show');
