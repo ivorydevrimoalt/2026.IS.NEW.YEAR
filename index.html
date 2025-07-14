@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2026</title>
-    <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom CSS for the tiled background */
@@ -61,8 +60,7 @@
     </style>
 </head>
 <body>
-    <!-- Audio element for background music -->
-    <audio id="backgroundMusic" autoplay src="https://github.com/ivorydevrimoalt/2026.IS.NEW.YEAR/raw/refs/heads/main/312.wav"></audio>
+    <audio id="backgroundMusic" src="https://github.com/ivorydevrimoalt/2026.IS.NEW.YEAR/raw/refs/heads/main/312.wav"></audio>
 
     <div class="content-container">
         <h1>2026 IS NEW YEAR</h1>
@@ -79,29 +77,69 @@
     </div>
 
     <script>
-        // Get the audio element
         const backgroundMusic = document.getElementById('backgroundMusic');
         const messageBox = document.getElementById('messageBox');
+        let audioPlayed = false; // Flag to prevent multiple play attempts
 
-        // Play music when the window loads.
-        // This is important because some browsers block autoplay without user interaction.
-        // We attempt to play it here, but a user interaction might still be required.
+        // Function to attempt playing audio
+        function tryPlayAudio() {
+            if (audioPlayed) return; // Don't try to play again if already played
+
+            backgroundMusic.play()
+                .then(() => {
+                    console.log("Audio started playing successfully.");
+                    audioPlayed = true;
+                    // Hide the message box if it was shown for autoplay prevention
+                    if (messageBox.classList.contains('show') && messageBox.textContent === "Click anywhere to play music!") {
+                        messageBox.classList.remove('show');
+                    }
+                })
+                .catch(e => {
+                    console.log("Autoplay was prevented:", e);
+                    // Show a message to the user to click anywhere to play music
+                    if (!audioPlayed) { // Only show message if audio hasn't played yet
+                        messageBox.textContent = "Click anywhere to play music!";
+                        messageBox.classList.add('show');
+                    }
+                });
+        }
+
+        // --- Autoplay Strategy ---
+
+        // Strategy 1: Attempt to play on a user's first interaction with the document
+        // This is the most common and reliable method due to browser policies.
+        document.addEventListener('click', tryPlayAudio, { once: true }); // Play only once on first click
+        document.addEventListener('keydown', tryPlayAudio, { once: true }); // Or on first key press
+
+        // Strategy 2 (Optional): Attempt muted autoplay on page load
+        // Uncomment the 'muted' attribute in the <audio> tag for this to work effectively.
+        /*
         window.onload = function() {
-            backgroundMusic.play().catch(e => {
-                console.log("Autoplay was prevented:", e);
-                // Optionally show a message to the user to click anywhere to play music
-                // messageBox.textContent = "Click anywhere to play music!";
-                // messageBox.classList.add('show');
-            });
+            backgroundMusic.muted = true; // Ensure it's muted
+            backgroundMusic.play()
+                .then(() => {
+                    console.log("Muted autoplay started successfully.");
+                    audioPlayed = true;
+                    // You might want to provide a UI element for the user to unmute
+                })
+                .catch(e => {
+                    console.log("Muted autoplay was prevented:", e);
+                    // Fallback to click-to-play if muted autoplay is also prevented
+                    messageBox.textContent = "Click anywhere to play music!";
+                    messageBox.classList.add('show');
+                });
+        };
+        */
 
-            // Manipulate browser history to make going back difficult.
-            // Push a new state on page load.
+
+        // --- History Manipulation (as in your original code) ---
+        window.onload = function() {
+            // Push a new state on page load to prevent easy back navigation
             history.pushState(null, document.title, location.href);
 
             // Listen for the popstate event (when back/forward button is pressed)
             window.addEventListener('popstate', function (event) {
                 // When the user tries to go back, push the current state again.
-                // This effectively keeps them on the same page.
                 history.pushState(null, document.title, location.href);
 
                 // Show a message to the user that they can't go back easily
@@ -112,19 +150,14 @@
                 }, 3000); // Hide message after 3 seconds
             });
 
-            // Optional: Prevent navigation away from the page (shows a confirmation dialog)
-            // This is generally not recommended for user experience and can be annoying.
-            /*
-            window.addEventListener('beforeunload', function (e) {
-                // Cancel the event
-                e.preventDefault();
-                // Chrome requires returnValue to be set
-                e.returnValue = '';
-                // Most browsers will display a default message like "Changes you made may not be saved."
-                // You cannot customize this message in modern browsers.
-            });
-            */
+            // If audio hasn't played by window.onload, try to play it.
+            // This caters to browsers with less strict autoplay policies or if MEI allows.
+            // However, the document click/keypress listener is the primary fallback.
+            tryPlayAudio();
         };
+
+        // Note: The 'beforeunload' event listener for preventing navigation
+        // is commented out as it's generally discouraged for user experience.
     </script>
 </body>
 </html>
